@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/lgtest.dir/test/test.cpp.o"
-  "lgtest.pdb"
-  "lgtest"
+  "../bin/lgtest.pdb"
+  "../bin/lgtest"
 )
 
 # Per-language clean rules from dependency scanning.
