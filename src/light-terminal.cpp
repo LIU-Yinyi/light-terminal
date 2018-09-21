@@ -1,25 +1,18 @@
 #include "light-terminal.hpp"
 
-std::atomic<bool> LgTerm::flag_moni(false);
+std::atomic<bool> flag_moni(false);
+std::thread *thr_moni;
 
-int LgTerm::win_row = 0;
-int LgTerm::win_col = 0;
+int win_row = 0;
+int win_col = 0;
 
-WINDOW LgTerm::*win_main;
-WINDOW LgTerm::*win_output;
-WINDOW LgTerm::*win_input;
+WINDOW *win_main;
+WINDOW *win_output;
+WINDOW *win_input;
 
-string LgTerm::buf;
+string buf;
 
-///////////////////
-
-LgTerm::LgTerm()
-{
-}
-
-LgTerm::~LgTerm()
-{
-}
+void thread_monitor();
 
 ///////////////////
 
@@ -40,9 +33,13 @@ bool LgTerm::init()
 	keypad(stdscr, true);
 	refresh();
 
+	win_output = subwin(win_main, win_row - 1, win_col, 0, 0);
+	win_input = subwin(win_main, 1, win_col, win_row - 1, 0);
+	scrollok(win_output, true);
+
 	/// thread config
 	flag_moni = true;
-	thr_moni = std::thread(thread_monitor);
+	thr_moni = new std::thread(thread_monitor);
 
 	return true;
 }
@@ -50,17 +47,21 @@ bool LgTerm::init()
 void LgTerm::quit()
 {
 	flag_moni = false;
-	thr_moni.join();
+	thr_moni->join();
+	delete thr_moni;
+	endwin();
 }
 
 ///////////////////
 
 char LgTerm::get_ch()
 {
+	return '\r';
 }
 
 string LgTerm::get_str()
 {
+	return "quit";
 }
 
 void LgTerm::print(const char* fmt, ...)
@@ -69,7 +70,7 @@ void LgTerm::print(const char* fmt, ...)
 
 	va_list ap;
 	va_start(ap, fmt);
-	vm_printw(win_output, fmt, ap);
+	vw_printw(win_output, fmt, ap);
 	va_end(ap);
 
 	wrefresh(win_output);
@@ -77,8 +78,10 @@ void LgTerm::print(const char* fmt, ...)
 
 ///////////////////
 
-void LgTerm::thread_monitor()
+void thread_monitor()
 {
+	//LgTerm::print("[monitor] thread start...");
+
 	while(flag_moni)
 	{
 		char ch = getch();
@@ -86,8 +89,8 @@ void LgTerm::thread_monitor()
 		if(ch != '\r')
 		{
 			touchwin(win_main);
-			buf += x;
-			waddch(win_output, x);
+			buf += ch;
+			waddch(win_input, ch);
 		}
 		else
 		{
@@ -96,5 +99,8 @@ void LgTerm::thread_monitor()
 		}
 
 		wrefresh(win_input);
+		
 	}
+
+	//LgTerm::print("[monitor] thread end.");
 }

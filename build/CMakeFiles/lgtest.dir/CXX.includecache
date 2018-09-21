@@ -1,0 +1,26 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+../inc/light-terminal.hpp
+iostream
+-
+string
+-
+curses.h
+-
+thread
+-
+atomic
+-
+chrono
+-
+
+/Users/champion/Projects/StudyProgram/CPP11/flush/light-terminal/test/test.cpp
+light-terminal.hpp
+/Users/champion/Projects/StudyProgram/CPP11/flush/light-terminal/test/light-terminal.hpp
+

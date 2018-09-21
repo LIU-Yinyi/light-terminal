@@ -10,29 +10,27 @@
 
 using namespace std;
 
-class LgTerm
+namespace LgTerm
 {
-public:
-	LgTerm();
-	~LgTerm();
+	/// interfaces
+	bool init();
+	void quit();
 
-	static bool init();
-	static void quit();
+	char get_ch();
+	string get_str();
+	void print(const char* fmt, ...);
 
-	static char get_ch();
-	static string get_str();
-	static void print(const char* fmt, ...);
+	/// in-block functions
+	/*
+	void thread_monitor();
 
-private:
-	static void thread_monitor();
-
-private:
 	static std::atomic<bool> flag_moni;
 	static std::thread thr_moni;
-	
+
 	static int win_row, win_col;
 	static WINDOW *win_main, *win_output, *win_input;
 	static string buf;
+	*/
 };
 
 #endif /* __LIGHT_TERMINAL_HPP */

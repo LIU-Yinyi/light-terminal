@@ -1,0 +1,4 @@
+/Users/champion/Projects/StudyProgram/CPP11/flush/light-terminal/build/CMakeFiles/lgtest.dir
+/Users/champion/Projects/StudyProgram/CPP11/flush/light-terminal/build/CMakeFiles/rebuild_cache.dir
+/Users/champion/Projects/StudyProgram/CPP11/flush/light-terminal/build/CMakeFiles/edit_cache.dir
+/Users/champion/Projects/StudyProgram/CPP11/flush/light-terminal/build/CMakeFiles/LgTerm.dir
