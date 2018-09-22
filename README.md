@@ -35,6 +35,7 @@ You can see that the program information interrupt the user input which makes th
 get<enter> /*The input line is always here*/
 ```
 
+---
 
 ### Install Dependent Libraries
 For Ubuntu:  
