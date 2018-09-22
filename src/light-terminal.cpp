@@ -3,6 +3,8 @@
 
 std::atomic<bool> flag_moni(false);
 std::thread *thr_moni;
+std::mutex scan_mtx;
+std::condition_variable enter_cv;
 
 int win_row = 0;
 int win_col = 0;
@@ -11,6 +13,7 @@ WINDOW *win_main;
 WINDOW *win_output;
 WINDOW *win_input;
 
+bool is_enter(false);
 string buf;
 
 void thread_monitor();
@@ -57,12 +60,25 @@ void LgTerm::quit()
 
 char LgTerm::get_ch()
 {
-	return '\r';
+	return getch();
 }
 
 string LgTerm::get_str()
 {
-	return "quit";
+	std::unique_lock<std::mutex> lk(scan_mtx);
+	while(!is_enter)
+	{
+		enter_cv.wait(lk);
+	}
+	string str = buf;
+
+#ifdef DEBUG
+	LgTerm::print("[str] %s\n", str.c_str());
+#endif
+
+	buf.clear();
+	is_enter = false;
+	return str;
 }
 
 void LgTerm::print(const char* fmt, ...)
@@ -83,13 +99,15 @@ void thread_monitor()
 {
 	while(flag_moni)
 	{
+		std::unique_lock<std::mutex> lk(scan_mtx);
 		char ch = getch();
 
 		if(ch == '\r')
 		{
 			touchwin(win_input);
 			wclear(win_input);
-			buf.clear();
+			is_enter = true;
+			enter_cv.notify_one();
 		}
 		else if(ch == '\b' || ch == 0x7F)
 		{

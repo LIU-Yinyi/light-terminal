@@ -33,4 +33,5 @@
 
 # Build File
 build/
-bin/lgtest
+bin/*
+!bin/exec.dir
