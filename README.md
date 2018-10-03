@@ -1,8 +1,8 @@
 ## Light Terminal Library for C++ Project
 - **Author**: Champion-Liu
 - **Revised**: Champion-Liu
-- **Version**: 1.0.0
-- **Date**: 2018-09-22
+- **Version**: 1.1.0
+- **Date**: 2018-10-03
 - **Abstract**: A light-terminal library based on curses, which can show user input text fixed at the bottom of the terminal in case of flushing out by program output information.
 
 ---
@@ -78,7 +78,7 @@ LgTerm::print(const char *format, ...);
 
 /// block scan
 char LgTerm::get_ch(); //!< get char each key
-string LgTerm::get_str(); //!< get string until enter key
+vector<string> LgTerm::get_strs(); //!< get array of strings until enter key
 
 /// quit
 LgTerm::quit();
@@ -103,9 +103,17 @@ PID    COMMAND      %CPU  TIME     #TH   #WQ  #PORTS MEM    PURG   CMPRS  PGRP  
 
 ---
 
+### New Features
+In version `1.1.0`, I add:
+
++ add `std::vector<string> get_strs()` for acquiring `argc argv` look-like variables;
+
+So the old function `string get_str()` is *depreciated*.
+
+---
+
 ### Further Features
 I will add some useful features for the further version:
 
 + add `spdlog` look-like debug with quick color decoration;
-+ add `std::vector<string> get_strs()` for acquiring `argc argv` look-like variables;
 + add `cpp-readline` look-like console with helpdesk and history record.

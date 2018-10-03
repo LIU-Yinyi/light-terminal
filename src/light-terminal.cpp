@@ -1,6 +1,21 @@
+/*************************************
+ * Light Terminal Project Excutable
+ *
+ * It is a slight script for console
+ * to optimize output style.
+ *
+ * @author:		Champion-Liu
+ * @revised:	Champion-Liu
+ * @email:		liuyinyi@vip.qq.com
+ * @version:	1.1.0.0
+ * @date:		2018-10-03
+ ************************************/
+
+/// Include Headers
 #include "light-terminal.hpp"
 #include "config.h"
 
+/// Global Variables
 std::atomic<bool> flag_moni(false);
 std::thread *thr_moni;
 std::mutex scan_mtx;
@@ -16,6 +31,7 @@ WINDOW *win_input;
 bool is_enter(false);
 string buf;
 
+/// Thread Function
 void thread_monitor();
 
 ///////////////////
@@ -81,6 +97,65 @@ string LgTerm::get_str()
 	return str;
 }
 
+std::vector<string> _split(const string& txt)
+{
+	std::vector<string> _strs;
+
+	size_t j = -1;
+	for(size_t i = 0; i < txt.length(); i++)
+	{
+		if(txt.at(i) == ' ')
+		{
+			size_t len = i - j - 1;
+			if(len < 1)
+			{
+				j = i;
+				continue;
+			}
+
+			string _arg = txt.substr(j + 1, len);
+			j = i;
+			if(_arg.length() != 0)
+				_strs.push_back(_arg);
+		}
+		/*
+		if(_strs.size() == 0 && txt.length() > 0)
+			_strs.push_back(txt);
+		*/
+	}
+
+	return _strs;
+}
+
+std::vector<string> LgTerm::get_strs()
+{
+	std::unique_lock<std::mutex> lk(scan_mtx);
+	while(!is_enter)
+	{
+		enter_cv.wait(lk);
+	}
+	string txt = buf;
+	buf.clear();
+	is_enter = false;
+
+	/*
+	if(txt.length() == 1)
+	{
+		if(txt.at(0) != ' ')
+		{
+			std::vector<string> _tmp;
+			_tmp.push_back(txt);
+			return _tmp;
+		}
+		else
+			return (std::vector<string>());
+	}
+	else
+		return _split(txt);
+	*/
+	return _split(txt);
+}
+
 void LgTerm::print(const char* fmt, ...)
 {
 	touchwin(win_output);
@@ -104,6 +179,7 @@ void thread_monitor()
 
 		if(ch == '\r')
 		{
+			buf += ' ';
 			touchwin(win_input);
 			wclear(win_input);
 			is_enter = true;
@@ -142,3 +218,4 @@ void thread_monitor()
 		
 	}
 }
+

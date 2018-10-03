@@ -1,3 +1,16 @@
+/*************************************
+ * Light Terminal Project Test Program
+ *
+ * This is a test also a tutorial for
+ * light-terminal library.
+ *
+ * @author:		Champion-Liu
+ * @revised:	Champion-Liu
+ * @email:		liuyinyi@vip.qq.com
+ * @version:	1.1.0.0
+ * @date:		2018-10-03
+ ************************************/
+
 #include <light-terminal.hpp>
 
 std::atomic<bool> flag_show(false);
@@ -22,12 +35,20 @@ int main()
 	bool isquit = false;
 	while(!isquit)
 	{
-		string cmd = LgTerm::get_str();
-		
+		std::vector<string> cmds = LgTerm::get_strs();
+		if(cmds.size() < 1)
+			continue;
+
+		string cmd = cmds.at(0);
+
 		if(cmd == "quit")
 			isquit = true;
 		else
+		{
 			LgTerm::print("[sys] your input cmd: < %s >\n", cmd.c_str());
+			for(int i = 1; i < cmds.size(); i++)
+				LgTerm::print("params[%d]: %s\n", i, cmds.at(i).c_str());
+		}
 	}
 
 	flag_show = false;
